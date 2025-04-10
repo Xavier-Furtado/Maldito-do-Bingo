@@ -3,15 +3,65 @@
 using namespace std;
 
 int main() {
-    string s1 = "";  // Uma string vazia
-    string s2 = "Olá, mundo!";  // Uma string com conteúdo
-
-    if (s1.empty()) {  // Verifica se s1 está vazia
-        cout << "s1 está vazia!" << endl;
+    char frase[1000]; // Usando um tamanho grande para suportar frases maiores
+    char escondida[1000];
+    
+    cout << "Digite a frase secreta: ";
+    cin.getline(frase, 1000); // Lê a frase com espaços
+    
+    // Cria a palavra escondida
+    for (int i = 0; frase[i] != '\0'; i++) {
+        if (frase[i] == ' ') {
+            escondida[i] = ' ';  // Espaços não são ocultos
+        } else {
+            escondida[i] = '_';  // Substitui as letras por '_'
+        }
     }
 
-    if (!s2.empty()) {  // Verifica se s2 NÃO está vazia
-        cout << "s2 tem: " << s2 << endl;
+    int erros = 0;
+    bool ganhou = false;
+
+    // O loop continuará até o jogador adivinhar a frase ou errar 6 vezes
+    while (erros < 6 && !ganhou) {
+        cout << "Frase: " << escondida << "\nErros restantes: " << 6 - erros << endl;
+        cout << "Digite uma letra: ";
+        char letra;
+        cin >> letra;
+
+        // Converte a letra para minúscula, caso o jogador digite maiúscula
+        if (letra >= 'A' && letra <= 'Z') {
+            letra = letra + ('a' - 'A');
+        }
+
+        bool acertou = false;
+        
+        // Verifica se a letra está na frase e atualiza a palavra escondida
+        for (int i = 0; frase[i] != '\0'; i++) {
+            if (frase[i] == letra) {
+                escondida[i] = letra;
+                acertou = true;
+            }
+        }
+
+        if (!acertou) {
+            erros++;
+        }
+
+        // Verifica se o jogador adivinhou toda a frase
+        ganhou = true;
+        for (int i = 0; frase[i] != '\0'; i++) {
+            if (escondida[i] == '_') {
+                ganhou = false;
+                break;
+            }
+        }
+    }
+
+    // Exibe o resultado final
+    if (ganhou) {
+        cout << "Parabéns! Você adivinhou a frase: " << frase << endl;
+    } else {
+        cout << "Perdeste! A frase era: " << frase << endl;
     }
 
     return 0;
